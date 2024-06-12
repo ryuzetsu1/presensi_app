@@ -7,12 +7,10 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
-  State<LoginScreen> createState() {
-    return _LoginScreenState();
-  }
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
@@ -27,7 +25,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (username.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter your username and password')),
+        const SnackBar(
+            content: Text('Please enter your username and password')),
       );
       return;
     }
@@ -36,7 +35,8 @@ class _LoginScreenState extends State<LoginScreen> {
       _isLoading = true;
     });
 
-    const url = 'https://presensi.spilme.id/login'; // Replace with your server address
+    const url =
+        'https://presensi.spilme.id/login'; // Replace with your server address
     final response = await http.post(
       Uri.parse(url),
       headers: {
@@ -47,9 +47,11 @@ class _LoginScreenState extends State<LoginScreen> {
         'password': password,
       }),
     );
+
     if (kDebugMode) {
       print(response.statusCode);
     }
+
     if (response.statusCode == 200) {
       final responseBody = jsonDecode(response.body);
       final nik = responseBody['nik'];
@@ -65,13 +67,11 @@ class _LoginScreenState extends State<LoginScreen> {
       await prefs.setString('imgProfil', imgUrl);
       await prefs.setString('nik', nik);
 
-      // ignore: use_build_context_synchronously
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => const DashboardScreen()),
             (route) => false,
       );
     } else {
-      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Invalid username or password')),
       );
@@ -96,7 +96,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    // Logo aplikasi
                     Image.asset(
                       'assets/images/logo_polbeng.png',
                       height: 128,
@@ -146,7 +145,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     const SizedBox(height: 24),
-                    // Password TextField
                     TextField(
                       controller: _passwordController,
                       decoration: InputDecoration(
@@ -175,7 +173,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       obscureText: !_isPasswordVisible,
                     ),
                     const SizedBox(height: 8),
-                    // Forgot password
                     GestureDetector(
                       onTap: () {
                         if (kDebugMode) {
@@ -194,13 +191,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     const SizedBox(height: 24),
-                    // Login Button
                     _isLoading
                         ? const CircularProgressIndicator()
                         : ElevatedButton(
                       onPressed: _login,
                       style: ElevatedButton.styleFrom(
-                        minimumSize: const Size(double.infinity, 50), // width and height
+                        minimumSize: const Size(double.infinity, 50),
                         backgroundColor: const Color(0xFF12A3DA),
                         foregroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
@@ -238,7 +234,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     const SizedBox(height: 40),
-                    // Register New Account
                     GestureDetector(
                       onTap: () {
                         // Register Tap
